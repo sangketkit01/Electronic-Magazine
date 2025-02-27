@@ -14,9 +14,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,9 +43,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import com.src.electronicmagazine.api_util.allPendingRegistrationUtility
+import com.src.electronicmagazine.api_util.getAllBannedMagazineUtility
 import com.src.electronicmagazine.api_util.getAllMagazineUtility
 import com.src.electronicmagazine.api_util.getCategoryUtility
 import com.src.electronicmagazine.api_util.getWriterUtility
@@ -54,7 +56,7 @@ import com.src.electronicmagazine.navigation.Screen
 import kotlin.random.Random
 
 @Composable
-fun HomeScreen(navController: NavHostController){
+fun BannedListScreen(navController : NavHostController){
 
     var magazineList  = remember { mutableStateListOf<Magazine>() }
     val context = LocalContext.current
@@ -64,7 +66,6 @@ fun HomeScreen(navController: NavHostController){
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycle by lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
 
-    var randomMagazine by remember { mutableStateOf<Magazine?>(null) }
     var category by remember { mutableStateOf<Category?>(null) }
     LaunchedEffect(lifecycle) {
         when(lifecycle){
@@ -73,25 +74,9 @@ fun HomeScreen(navController: NavHostController){
             Lifecycle.State.CREATED -> {}
             Lifecycle.State.STARTED -> {}
             Lifecycle.State.RESUMED -> {
-                getAllMagazineUtility(
+                getAllBannedMagazineUtility(
                     onResponse = { response->
                         magazineList.addAll(response)
-                        randomMagazine = magazineList[Random.nextInt(magazineList.size)]
-
-                        getCategoryUtility(
-                            randomMagazine?.categoryId ?: 1,
-                            onResponse = { response2->
-                                category = response2
-                            },
-                            onElse = { responseError->
-                                Toast.makeText(context,"Data not found", Toast.LENGTH_SHORT).show()
-                                Log.e("Error",responseError.message())
-                            },
-                            onFailure = { t->
-                                Toast.makeText(context,"Error onFailure", Toast.LENGTH_SHORT).show()
-                                t.message?.let { Log.e("Error",it) }
-                            }
-                        )
                     },
                     onElse = { responseError->
                         Toast.makeText(context,"Data not found", Toast.LENGTH_SHORT).show()
@@ -137,64 +122,27 @@ fun HomeScreen(navController: NavHostController){
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Box(
-            modifier = Modifier.height(450.dp)
-                .background(Color.Black),
-        ){
-            Image(
-                painter = rememberAsyncImagePainter(
-                    model = randomMagazine?.coverPath
-                        ?.replace("../uploads","http://10.0.2.2:3000/uploads")
-                ),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .height(450.dp)
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 10.dp)
-                    .padding(horizontal = 20.dp, vertical = 15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = category?.name ?: "Fashion",
-                    fontSize = 18.sp,
-                    color = Color.White,
-                    modifier = Modifier
-                        .background(BadgeColor(category?.name ?: "Fashion"))
-                        .padding(vertical = 3.dp, horizontal = 8.dp),
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = randomMagazine?.title ?: "",
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 15.5.sp,
-                    color = Color.White
-                )
-            }
-        }
-
         Row (
             modifier = Modifier.fillMaxWidth()
-                .height(74.dp)
-                .background(Color(26, 26, 26, 255)),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(top = 15.dp, start = 15.dp),
+            horizontalArrangement = Arrangement.Start
         ){
-            Text(
-                text = "Just Arrive",
-                fontSize = 30.sp,
-                color = Color.White
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowLeft,
+                contentDescription = null,
+                modifier = Modifier.size(60.dp)
+                    .clickable {
+                        navController.popBackStack()
+                    }
             )
         }
+
+        Text(
+            text = "Banned List",
+            fontSize = 25.sp,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
+        )
 
         magazineList.forEach { magazine->
 

@@ -18,9 +18,13 @@ sealed class Screen(val route : String , val name : String , val icon : Any?){
 
     data object EditProfile:Screen("edit_profile_screen","Edit Profile",null)
     data object Favorite:Screen("favorite_screen","Favorite Screen",null)
+    data object MyMagazineList:Screen("my_magazine_list_screen","My Magazine List",null)
 
     data object WriterRegistrationList:Screen("writer_registration_list_screen","Writer Registration List",null)
     data object WriterRegistration:Screen("writer_registration_screen","Writer Registration",null)
-    data object WriterRegistrationDetail:Screen("writer_registration_detail_screen","Writer Registration Detail Screen",null)
+    data object WriterRegistrationDetail:Screen("writer_registration_detail_screen","Writer Registration Detail",null)
     data object Writing:Screen("writing_screen","Writing",null)
+    data object WritingCont:Screen("writing_cont_screen","Writing Cont",null)
+
+    data object BannedList:Screen("banned_list_screen","Banned List",null)
 }

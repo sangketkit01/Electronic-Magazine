@@ -1,6 +1,7 @@
 package com.src.electronicmagazine.api_util
 
 import com.src.electronicmagazine.api.UserAPI
+import com.src.electronicmagazine.data.Notification
 import com.src.electronicmagazine.data.User
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
@@ -57,6 +58,13 @@ fun updateProfileUtility(
 
     UserClient.instance.updateProfile(userId,usernameBody,emailBody,nameBody,imagePath)
         .enqueueCallback(onResponse,onElse,onFailure)
+}
+
+fun getNotificationUtility(
+    userId : Int, onResponse: (List<Notification>) -> Unit,
+    onElse: (Response<List<Notification>>) -> Unit, onFailure: (Throwable) -> Unit
+){
+    UserClient.instance.getNotification(userId).enqueueCallback(onResponse,onElse,onFailure)
 }
 
 private fun String.toRequestBody() = this.toRequestBody("text/plain".toMediaTypeOrNull())

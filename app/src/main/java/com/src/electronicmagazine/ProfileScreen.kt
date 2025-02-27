@@ -177,7 +177,8 @@ fun ProfileScreen(navController : NavHostController){
             }
         }
 
-        Column (
+        if(sharePreferences.user?.role == "user"){
+            Column (
                 modifier = Modifier.fillMaxWidth()
                     .padding(vertical = 10.dp, horizontal = 25.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -215,6 +216,7 @@ fun ProfileScreen(navController : NavHostController){
                     )
                 }
             }
+        }
 
         if(sharePreferences.user?.role == "writer"){
             Column (
@@ -225,7 +227,7 @@ fun ProfileScreen(navController : NavHostController){
                 Row (
                     modifier = Modifier.fillMaxWidth()
                         .clickable {
-
+                            navController.navigate(Screen.Writing.route)
                         }
                         .clip(RoundedCornerShape(10.dp))
                         .padding(10.dp),
@@ -242,6 +244,45 @@ fun ProfileScreen(navController : NavHostController){
 
                     Text(
                         text = "Write a magazine",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier = Modifier.weight(2f)
+                    )
+
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        modifier = Modifier.size(35.dp).weight(1f),
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            Column (
+                modifier = Modifier.fillMaxWidth()
+                    .padding(vertical = 10.dp, horizontal = 25.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Row (
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable {
+                            navController.navigate(Screen.MyMagazineList.route)
+                        }
+                        .clip(RoundedCornerShape(10.dp))
+                        .padding(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Image(
+                        painter = painterResource(R.drawable.list),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(40.dp)
+                            .weight(1f)
+                    )
+
+                    Text(
+                        text = "My magazines",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
@@ -283,6 +324,45 @@ fun ProfileScreen(navController : NavHostController){
 
                     Text(
                         text = "Registration list",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier = Modifier.weight(2f)
+                    )
+
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        modifier = Modifier.size(35.dp).weight(1f),
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            Column (
+                modifier = Modifier.fillMaxWidth()
+                    .padding(vertical = 10.dp, horizontal = 25.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Row (
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable {
+                            navController.navigate(Screen.BannedList.route)
+                        }
+                        .clip(RoundedCornerShape(10.dp))
+                        .padding(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Image(
+                        painter = painterResource(R.drawable.list),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(40.dp)
+                            .weight(1f)
+                    )
+
+                    Text(
+                        text = "Banned list",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,

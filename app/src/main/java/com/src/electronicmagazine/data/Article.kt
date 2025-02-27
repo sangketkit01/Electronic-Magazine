@@ -21,5 +21,8 @@ data class Article(
     @SerializedName("content") val content : String,
 
     @Expose
+    @SerializedName("image_path") val imagePath : String,
+
+    @Expose
     @SerializedName("updated_at") val updatedAt : Timestamp
 ) : Parcelable

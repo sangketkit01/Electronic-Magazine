@@ -1,14 +1,18 @@
 package com.src.electronicmagazine.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.src.electronicmagazine.BannedListScreen
 import com.src.electronicmagazine.EditProfileScreen
 import com.src.electronicmagazine.FavoriteScreen
 import com.src.electronicmagazine.HomeScreen
 import com.src.electronicmagazine.LoginScreen
+import com.src.electronicmagazine.MyMagazineListScreen
 import com.src.electronicmagazine.NotificationScreen
 import com.src.electronicmagazine.ProfileScreen
 import com.src.electronicmagazine.ReadScreen
@@ -18,9 +22,11 @@ import com.src.electronicmagazine.TopicScreen
 import com.src.electronicmagazine.WriterRegistrationDetailScreen
 import com.src.electronicmagazine.WriterRegistrationListScreen
 import com.src.electronicmagazine.WriterRegistrationScreen
+import com.src.electronicmagazine.WritingContScreen
 import com.src.electronicmagazine.WritingScreen
 import com.src.electronicmagazine.session.SharePreferencesManager
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(navController : NavHostController){
     val context = LocalContext.current
@@ -70,6 +76,10 @@ fun NavGraph(navController : NavHostController){
             WritingScreen(navController)
         }
 
+        composable(Screen.WritingCont.route){
+            WritingContScreen(navController)
+        }
+
         composable(Screen.WriterRegistrationList.route) {
             WriterRegistrationListScreen(navController)
         }
@@ -84,6 +94,14 @@ fun NavGraph(navController : NavHostController){
 
         composable(Screen.Favorite.route) {
             FavoriteScreen(navController)
+        }
+
+        composable(Screen.BannedList.route) {
+            BannedListScreen(navController)
+        }
+
+        composable(Screen.MyMagazineList.route) {
+            MyMagazineListScreen(navController)
         }
     }
 }

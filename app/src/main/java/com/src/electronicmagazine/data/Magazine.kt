@@ -19,6 +19,9 @@ data class Magazine(
     @SerializedName("description") val description : String,
 
     @Expose
+    @SerializedName("cover_path") val coverPath : String,
+
+    @Expose
     @SerializedName("status") val status : String,
 
     @Expose
@@ -29,9 +32,6 @@ data class Magazine(
 
     @Expose
     @SerializedName("category_id") val categoryId : Int,
-
-    @Expose
-    @SerializedName("image_id") val imageId : Int,
 
     @Expose
     @SerializedName("created_at") val createdAt : Timestamp
