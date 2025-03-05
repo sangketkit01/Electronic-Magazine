@@ -56,6 +56,9 @@ import com.src.electronicmagazine.data.Magazine
 import com.src.electronicmagazine.data.User
 import com.src.electronicmagazine.navigation.Screen
 import com.src.electronicmagazine.session.SharePreferencesManager
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun SearchScreen(navController : NavHostController){
@@ -125,9 +128,15 @@ fun SearchScreen(navController : NavHostController){
             )
         }
 
-        magazineList.forEach{magazine->
+        magazineList.forEach{ magazine->
             var category by remember { mutableStateOf<Category?>(null) }
             var writer by remember { mutableStateOf<User?>(null) }
+
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
+
+            val date: Date? = inputFormat.parse(magazine.createdAt.toString())
+            val formattedCreatedAt = date?.let { outputFormat.format(it) }
 
             getCategoryUtility(
                 magazine.categoryId,
@@ -184,8 +193,9 @@ fun SearchScreen(navController : NavHostController){
                     ),
                     contentDescription = null,
                     modifier = Modifier.fillMaxWidth()
-                        .height(173.dp),
-                    contentScale = ContentScale.Fit
+                        .height(173.dp)
+                        .background(Color(68, 68, 68, 255)),
+                    contentScale = ContentScale.Crop
                 )
 
                 Column(
@@ -204,7 +214,7 @@ fun SearchScreen(navController : NavHostController){
                     )
 
                     Text(
-                        text = "By: ${writer?.name ?: ""} December 01,2024",
+                        text = "By: ${writer?.name ?: ""} $formattedCreatedAt",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(140, 140, 140, 255),

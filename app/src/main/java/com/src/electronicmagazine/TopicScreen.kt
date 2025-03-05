@@ -50,6 +50,9 @@ import com.src.electronicmagazine.data.Category
 import com.src.electronicmagazine.data.Magazine
 import com.src.electronicmagazine.data.User
 import com.src.electronicmagazine.navigation.Screen
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.random.Random
 
 @Composable
@@ -160,6 +163,18 @@ fun TopicScreen(navController: NavHostController) {
                         .align(Alignment.TopCenter)
                         .fillMaxWidth()
                         .height(450.dp)
+                        .clickable {
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "magazine_id" , randomMagazine?.magazineId
+                            )
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "writer_id" , randomMagazine?.writerId
+                            )
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "category_id",randomMagazine?.categoryId
+                            )
+                            navController.navigate(Screen.Read.route)
+                        }
                 )
 
                 Column(
@@ -208,6 +223,12 @@ fun TopicScreen(navController: NavHostController) {
             magazineList.forEach{ magazine ->
                 var writer by remember { mutableStateOf<User?>(null) }
 
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+                val outputFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
+
+                val date: Date? = inputFormat.parse(magazine.createdAt.toString())
+                val formattedCreatedAt = date?.let { outputFormat.format(it) }
+
                 getWriterUtility(
                     magazine.writerId,
                     onResponse = { response->
@@ -244,6 +265,7 @@ fun TopicScreen(navController: NavHostController) {
                                 .fillMaxWidth()
                                 .height(173.dp)
                                 .align(Alignment.Center)
+                                .background(Color(26, 26, 26, 255))
                         )
 
                         Text(
@@ -282,7 +304,7 @@ fun TopicScreen(navController: NavHostController) {
                     )
 
                     Text(
-                        text = "By: ${writer?.name ?: ""} December 01,2024",
+                        text = "By: ${writer?.name ?: ""} $formattedCreatedAt",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color(196, 196, 196, 255),

@@ -1,5 +1,6 @@
 package com.src.electronicmagazine
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -51,8 +52,12 @@ import com.src.electronicmagazine.data.Category
 import com.src.electronicmagazine.data.Magazine
 import com.src.electronicmagazine.data.User
 import com.src.electronicmagazine.navigation.Screen
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.random.Random
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun HomeScreen(navController: NavHostController){
 
@@ -152,6 +157,18 @@ fun HomeScreen(navController: NavHostController){
                     .align(Alignment.TopCenter)
                     .fillMaxWidth()
                     .height(450.dp)
+                    .clickable {
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "magazine_id" , randomMagazine?.magazineId
+                        )
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "writer_id" , randomMagazine?.writerId
+                        )
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "category_id",randomMagazine?.categoryId
+                        )
+                        navController.navigate(Screen.Read.route)
+                    }
             )
 
             Column(
@@ -200,6 +217,12 @@ fun HomeScreen(navController: NavHostController){
 
             var loopCategory by remember { mutableStateOf<Category?>(null) }
             var writer by remember { mutableStateOf<User?>(null) }
+
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
+
+            val date: Date? = inputFormat.parse(magazine.createdAt.toString())
+            val formattedCreatedAt = date?.let { outputFormat.format(it) }
 
             getCategoryUtility(
                 magazine.categoryId,
@@ -262,6 +285,7 @@ fun HomeScreen(navController: NavHostController){
                         modifier = Modifier.padding(10.dp)
                             .fillMaxWidth()
                             .align(Alignment.Center)
+                            .background(Color(26, 26, 26, 255))
                     )
 
                     Text(
@@ -300,7 +324,7 @@ fun HomeScreen(navController: NavHostController){
                 )
 
                 Text(
-                    text = "By: ${writer?.name} 01,2024",
+                    text = "By: ${writer?.name} $formattedCreatedAt",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(196, 196, 196, 255),

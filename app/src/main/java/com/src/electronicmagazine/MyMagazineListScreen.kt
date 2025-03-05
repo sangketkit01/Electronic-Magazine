@@ -54,6 +54,9 @@ import com.src.electronicmagazine.data.Magazine
 import com.src.electronicmagazine.data.User
 import com.src.electronicmagazine.navigation.Screen
 import com.src.electronicmagazine.session.SharePreferencesManager
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun MyMagazineListScreen(navController : NavHostController){
@@ -150,6 +153,12 @@ fun MyMagazineListScreen(navController : NavHostController){
 
             var loopCategory by remember { mutableStateOf<Category?>(null) }
             var writer by remember { mutableStateOf<User?>(null) }
+
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
+
+            val date: Date? = inputFormat.parse(magazine.createdAt.toString())
+            val formattedCreatedAt = date?.let { outputFormat.format(it) }
 
             getCategoryUtility(
                 magazine.categoryId,
@@ -250,7 +259,7 @@ fun MyMagazineListScreen(navController : NavHostController){
                 )
 
                 Text(
-                    text = "By: ${writer?.name} 01,2024",
+                    text = "By: ${writer?.name} $formattedCreatedAt",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(196, 196, 196, 255),

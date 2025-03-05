@@ -70,6 +70,9 @@ import com.src.electronicmagazine.data.Magazine
 import com.src.electronicmagazine.data.User
 import com.src.electronicmagazine.navigation.Screen
 import com.src.electronicmagazine.session.SharePreferencesManager
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.random.Random
 
 @Composable
@@ -93,6 +96,12 @@ fun ReadScreen(navController : NavHostController){
     var article by remember { mutableStateOf<Article?>(null) }
     var favorite by remember { mutableStateOf<Favorite?>(null) }
 
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+    val outputFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
+
+    var date: Date? by remember { mutableStateOf(null) }
+    var formattedCreatedAt by remember { mutableStateOf("") }
+
     val (isFavorite, setFavorite) = remember { mutableStateOf(false) }
     LaunchedEffect(lifecycle) {
         when(lifecycle){
@@ -105,6 +114,9 @@ fun ReadScreen(navController : NavHostController){
                     magazineId!!,
                     onResponse = { response->
                         magazine = response
+
+                        date = inputFormat.parse(magazine?.createdAt.toString())
+                        formattedCreatedAt = date?.let { outputFormat.format(it) }.toString()
                     },
                     onElse = { responseError->
                         Toast.makeText(context,"Data not found", Toast.LENGTH_SHORT).show()
@@ -180,7 +192,6 @@ fun ReadScreen(navController : NavHostController){
     }
 
 
-
     val scrollState = rememberScrollState()
 
     Column (
@@ -196,7 +207,6 @@ fun ReadScreen(navController : NavHostController){
                 modifier = Modifier.fillMaxWidth()
             ){
 
-
                 Image(
                     painter = rememberAsyncImagePainter(
                         model = magazine?.coverPath
@@ -208,6 +218,7 @@ fun ReadScreen(navController : NavHostController){
                         .fillMaxWidth()
                         .align(Alignment.Center)
                         .height(279.dp)
+
                 )
 
                 Text(
@@ -241,7 +252,7 @@ fun ReadScreen(navController : NavHostController){
             )
 
                 Text(
-                    text = "By: ${writer?.name ?: ""} December 01,2024",
+                    text = "By: ${writer?.name ?: ""} $formattedCreatedAt",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(196, 196, 196, 255),
@@ -322,9 +333,10 @@ fun ReadScreen(navController : NavHostController){
             ),
             contentDescription = null,
             modifier = Modifier.fillMaxWidth()
-                .height(173.dp)
-                .padding(10.dp),
-            contentScale = ContentScale.Fit
+                .height(200.dp)
+                .padding(10.dp)
+                .background(Color(68, 68, 68, 255)),
+            contentScale = ContentScale.Crop
         )
 
         Spacer(modifier = Modifier.height(20.dp))
